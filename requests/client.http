@@ -1,0 +1,13 @@
+// Configuração Cabeçalho
+@hostname = localhost
+@port = 1080
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+@accept = application/json
+
+// Parâmetros
+@email = "test@test
+
+GET http://{{host}}/api/clients HTTP/1.1
+Accept: {{accept}}
+###

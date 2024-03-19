@@ -1,0 +1,12 @@
+// Configuração Cabeçalho
+@hostname = localhost
+@port = 1080
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+@accept = application/json
+
+// Parâmetros
+
+GET http://{{host}}/api/accounts/historic/30 HTTP/1.1
+Accept: {{accept}}
+###

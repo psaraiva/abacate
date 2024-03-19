@@ -1,0 +1,17 @@
+// Configuração Cabeçalho
+@hostname = localhost
+@port = 1080
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+@accept = application/json
+
+// Parâmetros
+
+GET http://{{host}}/api/transfer HTTP/1.1
+content-type: {{contentType}}
+
+{
+    "clientIdTo": "2",
+    "value": 800
+}
+###

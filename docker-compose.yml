@@ -1,0 +1,71 @@
+version: '3'
+services:
+
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: abacate-api
+    restart: unless-stopped
+    tty: true
+    environment:
+      COMPOSER_MEMORY_LIMIT: -1
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      custom_net:
+        ipv4_address: 10.5.0.4
+
+  #Nginx Service
+  webserver:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: abacate-webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "1080:80"
+    volumes:
+      - ./src:/var/www
+    networks:
+      custom_net:
+        ipv4_address: 10.5.0.5
+    depends_on:
+      - app
+
+  #Postgres Service
+  db:
+    container_name: abacate-db
+    image: postgres:16.2-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cmnxmnzzjcczjncnxcnzkncjnc}
+      PGDATA: /data/postgres
+    volumes:
+       - abacate-data:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      custom_net:
+        ipv4_address: 10.5.0.2
+    restart: unless-stopped
+
+#Docker Networks
+networks:
+  custom_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+
+#Volumes
+volumes:
+  abacate-data:
+    driver: local
