@@ -1,11 +1,14 @@
-version: '3'
 services:
 
   #PHP Service
   app:
     build:
-      context: .
+      args:
+        user: app-abacate
+        uid: 1000
+      context: ./
       dockerfile: docker/php/Dockerfile
+    image: abacate-php
     container_name: abacate-api
     restart: unless-stopped
     tty: true
@@ -48,7 +51,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cmnxmnzzjcczjncnxcnzkncjnc}
       PGDATA: /data/postgres
     volumes:
-       - abacate-data:/data/postgres
+       - vdata:/data/postgres
     ports:
       - "5432:5432"
     networks:
@@ -67,5 +70,5 @@ networks:
 
 #Volumes
 volumes:
-  abacate-data:
+  vdata:
     driver: local
